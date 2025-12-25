@@ -137,7 +137,7 @@ spec:
       - name: task-manager
         image: iesodias/task-manager:latest
         ports:
-        - containerPort: 8080
+        - containerPort: 8081
         resources:
           requests:
             memory: "64Mi"
@@ -156,7 +156,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 8080
+    targetPort: 8081
   type: LoadBalancer
 ```
 
@@ -261,11 +261,66 @@ kubectl get svc task-manager-service -o jsonpath='{.status.loadBalancer.ingress[
 
 ## Passo 13: Testar a Aplicação
 
-Após obter o IP externo do LoadBalancer:
+Após obter o IP externo do LoadBalancer, substitua `<EXTERNAL-IP>` pelo IP obtido no passo anterior.
+
+### 13.1 Testar Página Inicial
 
 ```bash
-curl http://<EXTERNAL-IP>
+curl http://<EXTERNAL-IP>/
 ```
+
+### 13.2 Testar Status da Aplicação
+
+```bash
+curl http://<EXTERNAL-IP>/api/status
+```
+
+### 13.3 Testar Endpoint de Saudação
+
+```bash
+curl http://<EXTERNAL-IP>/api/hello
+```
+
+### 13.4 Testar Nome do Container
+
+```bash
+curl http://<EXTERNAL-IP>/api/getContainerName
+```
+
+### 13.5 Testar Informações do Sistema
+
+```bash
+curl http://<EXTERNAL-IP>/api/info
+```
+
+### 13.6 Testar Health Check (Actuator)
+
+```bash
+curl http://<EXTERNAL-IP>/actuator/health
+```
+
+### 13.7 Testar Consulta de CEP
+
+```bash
+curl http://<EXTERNAL-IP>/api/cep/01310100
+```
+
+---
+
+## Endpoints Disponíveis
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/` | Página inicial (Home) |
+| GET | `/status` | Página de status (HTML) |
+| GET | `/api/hello` | Endpoint de saudação |
+| GET | `/api/status` | Status da aplicação (JSON) |
+| GET | `/api/cep/{cep}` | Consulta de CEP via API ViaCEP |
+| GET | `/api/getContainerName` | Nome do container/hostname |
+| GET | `/api/info` | Informações do sistema |
+| GET | `/api/json` | Retorna dados JSON estáticos |
+| GET | `/actuator/health` | Status de saúde da aplicação |
+| GET | `/actuator/info` | Informações da aplicação |
 
 ---
 
