@@ -176,7 +176,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/iesodias/aks_argo.git
-    targetRevision: HEAD
+    targetRevision: main
     path: manifests
   destination:
     server: https://kubernetes.default.svc
@@ -231,19 +231,27 @@ O ArgoCD irá automaticamente sincronizar e fazer o deploy da aplicação a part
 
 ## Passo 12: Verificar Deploy
 
-### 12.1 Verificar Pods
+### 12.1 Verificar Application no ArgoCD
+
+```bash
+kubectl get application -n argocd
+```
+
+O status deve mostrar **Synced** e **Healthy**.
+
+### 12.2 Verificar Pods
 
 ```bash
 kubectl get pods -l app=task-manager
 ```
 
-### 12.2 Verificar Service
+### 12.3 Verificar Service
 
 ```bash
 kubectl get svc task-manager-service
 ```
 
-### 12.3 Obter IP Externo
+### 12.4 Obter IP Externo
 
 ```bash
 kubectl get svc task-manager-service -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
@@ -287,6 +295,16 @@ az group delete --name rg-argocd-lab --yes --no-wait
 
 ```
 ┌─────────────────────────────────────────────────────────┐
+│                     GitHub                               │
+│  ┌───────────────────────────────────────────────────┐  │
+│  │  Repository: iesodias/aks_argo                     │  │
+│  │  └── manifests/app.yaml                            │  │
+│  └───────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────┘
+                            │
+                            │ git pull (GitOps)
+                            ▼
+┌─────────────────────────────────────────────────────────┐
 │                      Azure Cloud                         │
 │  ┌───────────────────────────────────────────────────┐  │
 │  │                   AKS Cluster                      │  │
@@ -294,7 +312,7 @@ az group delete --name rg-argocd-lab --yes --no-wait
 │  │  │    ArgoCD       │  │    Default Namespace    │ │  │
 │  │  │  ┌───────────┐  │  │  ┌───────────────────┐  │ │  │
 │  │  │  │  Server   │  │  │  │   Task Manager    │  │ │  │
-│  │  │  │  Repo     │  │  │  │   Deployment      │  │ │  │
+│  │  │  │  Repo     │──┼──┼─▶│   Deployment      │  │ │  │
 │  │  │  │  Controller│ │  │  │   (2 replicas)    │  │ │  │
 │  │  │  └───────────┘  │  │  └───────────────────┘  │ │  │
 │  │  └─────────────────┘  │  ┌───────────────────┐  │ │  │
