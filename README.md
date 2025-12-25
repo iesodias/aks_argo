@@ -137,7 +137,7 @@ spec:
       - name: task-manager
         image: iesodias/task-manager:latest
         ports:
-        - containerPort: 8081
+        - containerPort: 8000
         resources:
           requests:
             memory: "64Mi"
@@ -156,7 +156,7 @@ spec:
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 8081
+    targetPort: 8000
   type: LoadBalancer
 ```
 
