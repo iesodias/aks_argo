@@ -269,40 +269,38 @@ Após obter o IP externo do LoadBalancer, substitua `<EXTERNAL-IP>` pelo IP obti
 curl http://<EXTERNAL-IP>/
 ```
 
-### 13.2 Testar Status da Aplicação
+### 13.2 Testar Health Check
 
 ```bash
-curl http://<EXTERNAL-IP>/api/status
+curl http://<EXTERNAL-IP>/api/health
 ```
 
-### 13.3 Testar Endpoint de Saudação
+### 13.3 Listar Tarefas
 
 ```bash
-curl http://<EXTERNAL-IP>/api/hello
+curl http://<EXTERNAL-IP>/api/tasks
 ```
 
-### 13.4 Testar Nome do Container
+### 13.4 Criar uma Tarefa
 
 ```bash
-curl http://<EXTERNAL-IP>/api/getContainerName
+curl -X POST http://<EXTERNAL-IP>/api/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Minha primeira tarefa","description":"Teste do ArgoCD","priority":"high"}'
 ```
 
-### 13.5 Testar Informações do Sistema
+### 13.5 Ver Estatísticas
 
 ```bash
-curl http://<EXTERNAL-IP>/api/info
+curl http://<EXTERNAL-IP>/api/stats
 ```
 
-### 13.6 Testar Health Check (Actuator)
+### 13.6 Acessar Swagger UI
 
-```bash
-curl http://<EXTERNAL-IP>/actuator/health
+Acesse no navegador:
+
 ```
-
-### 13.7 Testar Consulta de CEP
-
-```bash
-curl http://<EXTERNAL-IP>/api/cep/01310100
+http://<EXTERNAL-IP>/docs
 ```
 
 ---
@@ -311,16 +309,15 @@ curl http://<EXTERNAL-IP>/api/cep/01310100
 
 | Método | Endpoint | Descrição |
 |--------|----------|-----------|
-| GET | `/` | Página inicial (Home) |
-| GET | `/status` | Página de status (HTML) |
-| GET | `/api/hello` | Endpoint de saudação |
-| GET | `/api/status` | Status da aplicação (JSON) |
-| GET | `/api/cep/{cep}` | Consulta de CEP via API ViaCEP |
-| GET | `/api/getContainerName` | Nome do container/hostname |
-| GET | `/api/info` | Informações do sistema |
-| GET | `/api/json` | Retorna dados JSON estáticos |
-| GET | `/actuator/health` | Status de saúde da aplicação |
-| GET | `/actuator/info` | Informações da aplicação |
+| GET | `/` | Página inicial (HTML) |
+| GET | `/docs` | Swagger UI (Documentação interativa) |
+| GET | `/api/health` | Health check da aplicação |
+| GET | `/api/tasks` | Listar todas as tarefas |
+| POST | `/api/tasks` | Criar nova tarefa |
+| GET | `/api/tasks/{id}` | Obter tarefa por ID |
+| PUT | `/api/tasks/{id}` | Atualizar tarefa |
+| DELETE | `/api/tasks/{id}` | Deletar tarefa |
+| GET | `/api/stats` | Estatísticas das tarefas |
 
 ---
 
